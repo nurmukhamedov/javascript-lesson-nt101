@@ -91,14 +91,14 @@
 // console.log(calcAge(2008));
 
 
-const calcAge2 = (birthYear) => {
-    const age = 2023 - birthYear;
-    return age;
-}
+// const calcAge2 = (birthYear) => {
+//     const age = 2023 - birthYear;
+//     return age;
+// }
 
-const calcAge3 = (birthYear) => 2023 - birthYear;
+// const calcAge3 = (birthYear) => 2023 - birthYear;
 
-console.log(calcAge3(2004));
+// console.log(calcAge3(2004));
 
 
 
