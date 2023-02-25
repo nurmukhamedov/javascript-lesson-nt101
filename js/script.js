@@ -1,137 +1,161 @@
-// const studentId = document.querySelector('#studentId');
-// const btn = document.querySelector('#lookupButton');
-// const studentInfo = document.querySelector('#studentInfo');
+// const form = document.querySelector('.form');
+
+// const nameInput = document.querySelector('#name');
+// const priceInput = document.querySelector('#price');
+// const itemId = document.querySelector('#itemId');
+
+// form.addEventListener('submit', (e) => {
+//     e.preventDefault();
+
+//     if (itemId.value) {
+//         item = JSON.parse(localStorage.getItem(itemId.value));
+//         item.name = nameInput.value;
+//         item.price = priceInput.value;
+
+//     } else {
+//         item = {
+//             name: nameInput.value,
+//             price: priceInput.value
+//         }
+//         itemId.value = `item ${Date.now()}`;
+//     }
+
+//     localStorage.setItem(itemId.value, JSON.stringify(item));
+//     nameInput.value = "";
+//     priceInput.value = "";
+//     itemId.value = "";
+
+//     renderList();
+// });
+// const itemList = document.querySelector('.itemList');
+
+
+// function renderList() {
+//     itemList.innerHTML = '';
+//     let totalPrice = 0;
+//     for (const key in localStorage) {
+//         if (localStorage.hasOwnProperty(key)) {
+//             const item = JSON.parse(localStorage.getItem(key));
+//             console.log(item);
+//             const list = document.createElement('li');
+//             list.innerHTML = `Name: ${item.name} Price: ${item.price}`;
+//             itemList.appendChild(list);
+//             const editButton = document.createElement('button');
+//             editButton.innerHTML = 'Edit';
+//             list.appendChild(editButton)
+//             editButton.addEventListener('click', () => {
+//                 nameInput.value = item.name;
+//                 priceInput.value = item.price;
+//                 itemId.value = key;
+//             });
+//             const deleteButton = document.createElement('button');
+//             deleteButton.innerHTML = 'Delete';
+//             list.appendChild(deleteButton);
+//             deleteButton.addEventListener('click', () => {
+//                 localStorage.removeItem(key);
+//                 renderList();
+//             })
+//             totalPrice = totalPrice + Number(item.price);
+//             console.log(totalPrice);
+//         }
+
+//     }
+// }
+// renderList();
+
+
+// const myFragment = document.createDocumentFragment();
+// const container = document.getElementById('countries');
+
+// const text1 = document.createElement('p');
+// const text2 = document.createElement('p');
+// const text3 = document.createElement('p');
 
 
 
-// const students = [
-//     { id: 1, name: 'Alice', grade: 'A' },
-//     { id: 2, name: 'Bob', grade: 'C' },
-//     { id: 3, name: 'Charlie', grade: 'B' },
-//     { id: 4, name: 'Dave', grade: 'A' },
-//     { id: 5, name: 'Eve', grade: 'B' },
-// ];
+// myFragment.appendChild(text1);
+// myFragment.appendChild(text2);
+// myFragment.appendChild(text3);
+
+// container.appendChild(myFragment);
+
+// console.log('Alert tugasa chiqaman');
+// alert('Hello World');
+
+// const text = document.querySelector('.text');
+// const btn = document.querySelector('.btn');
 
 // btn.addEventListener('click', () => {
-//     const id = +studentId.value;
-//     const student = students.find((s) => s.id === id);
-//     if (student) {
-//         studentInfo.innerHTML = `<h3> Name: ${student.name} va ${student.grade} </h3>`;
-//     } else {
-//         studentInfo.innerHTML = `<h3> Bunday id raqamli user yo'q</h3>`;
-//     }
-// });
 
-// const myList = document.querySelectorAll('.myList li');
+//     setTimeout(() => {
+//         text.style.color = 'red';
 
+//     }, 2000);
 
-// myList.forEach((list) => {
-//     list.addEventListener('click', () => {
-//         console.log(`Clicked ${list.textContent}`);
-//     });
+//     text.innerText = 'Hello World';
+
 // })
 
+// let pizza;
 
-// console.log(window);
+// function orderPizza() {
+//     console.log('Order Pizza');
 
-// localStorage.setItem('1', 'Muhammadrasul');
-// localStorage.setItem('2', 'Mirzohid');
+//     setTimeout(() => {
+//         pizza = 'My Pizza';
+//     }, 3000);
 
-
-
-// const student1 = localStorage.getItem('1');
-// const student2 = localStorage.getItem('2');
-// console.log(typeof student1);
-// console.log(student2);
-
-// const person = {
-//     name: 'John',
-//     age: 30
+//     console.log('Pizza was ordered');
 // }
 
+// orderPizza(); //
+// // 'Order Pizza'
 
-// const jsonObj = JSON.stringify(person);
-// const jsonPareObjs = JSON.parse(jsonObj)
+// // My pizza hozircha qayerdadir turadi
+// // Pizza was ordered
 
-// console.log(jsonObj);
-// console.log(jsonPareObjs);
-
-
-// const block = document.querySelector('.block');
-// const text = document.querySelector('.text');
-
-// const box = block.previousElementSibling;
-// const card = block.nextElementSibling;
-// const myList = text.parentNode;
+// // Eat undefined
 
 
-// console.log(block);
-// console.log(box);
-// console.log(card);
-// console.log(myList);
+// console.log(`Eat ${pizza}`);
 
-// const link = document.querySelector('.link');
-// const myList = link.closest('.text');
-// console.log(myList);
+// setTimeout(() => {
+//     console.log(pizza);
+// }, 2500);
 
-const form = document.querySelector('.form');
 
-const nameInput = document.querySelector('#name');
-const priceInput = document.querySelector('#price');
-const itemId = document.querySelector('#itemId');
+const name = 'uzbekistan';
+const url = `https://restcountries.com/v3.1/name/${name}`;
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
+const countryWrapper = document.querySelector('#countries');
 
-    if (itemId.value) {
-        item = JSON.parse(localStorage.getItem(itemId.value));
-        item.name = nameInput.value;
-        item.price = priceInput.value;
-
-    } else {
-        item = {
-            name: nameInput.value,
-            price: priceInput.value
-        }
-        itemId.value = `item ${Date.now()}`;
+fetch(url).then((response) => {
+    if (!response.ok) {
+        throw new Error('Ishlamayapti')
     }
+    return response.json();
+}).then((data) => {
+    data.map((country) => {
 
-    localStorage.setItem(itemId.value, JSON.stringify(item));
-    nameInput.value = "";
-    priceInput.value = "";
-    itemId.value = "";
+        const countryElement = document.createElement('div');
+        const flagElement = document.createElement('img');
+        const countryName = document.createElement('h3');
+        const populationElement = document.createElement('span');
+        flagElement.src = country.flags.png;
+        flagElement.alt = country.name.common;
+        countryName.innerText = country.name.common;
+        countryElement.appendChild(flagElement);
+        populationElement.innerText = country.population;
 
-    renderList();
-});
-const itemList = document.querySelector('.itemList');
+        countryElement.appendChild(countryName);
+        countryElement.appendChild(populationElement);
+        countryWrapper.appendChild(countryElement);
+        console.log(country);
 
+    })
 
+}).catch((error) => console.error('Nimadir xato ketgan API ga qara', error));
 
-
-function renderList() {
-    itemList.innerHTML = '';
-
-    for (const key in localStorage) {
-        if (localStorage.hasOwnProperty(key)) {
-            const item = JSON.parse(localStorage.getItem(key));
-
-            console.log(item);
-            const list = document.createElement('li');
-            list.innerHTML = `Name: ${item.name} Price: ${item.price}`;
-            itemList.appendChild(list);
-            const editButton = document.createElement('button');
-            editButton.innerHTML = 'Edit';
-
-            list.appendChild(editButton)
-            editButton.addEventListener('click', () => {
-                nameInput.value = item.name;
-                priceInput.value = item.price;
-                itemId.value = key;
-            })
-        }
-    }
-}
-renderList();
 
 
 
