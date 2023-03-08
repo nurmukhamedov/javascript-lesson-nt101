@@ -1,147 +1,151 @@
-// const x = 5;
-// const y = x;
-
-
-
-// let z = 6;
-// z = 7;
-// console.log(x);
-// console.log(y);
-
-// const obj = {
-//     name: 'John',
-//     age: 31
-// }
-
-
-// const obj2 = obj;
-
-// console.log(obj, obj2);
-
-// console.log(obj2.age = 45);
-
-// console.log(obj, obj2);
-
-// const xArray = [1, 2, 3, 4];
-
-// const zArray = xArray;
-
-// zArray.push(5, 6, 7);
-
-// console.log(zArray, xArray);
-
-// let myName = 'Dave';
-
-// myName = 'John';
-// myName = 'Jack';
-
-// const array = [1, 2, 3, 4, 5];
-
-// array.push(8);
-
-
-// const yArray = [1, 2, 3, 4, 5];
-
-// yArray.push(8, 9);
-
-// const zArray = yArray;
-
-// zArray.push(25);
-// console.log(zArray);
-// console.log(yArray);
-
-// const scoreObj1 = {
-//     name: 44,
-//     age: 12,
-//     third: {
-//         a: 1, b: 2
-//     }
-// }
-
-// const newObjWithDeep = scoreObj1;
-
-// newObjWithDeep.name = 'Hello world';
-
-// console.log(scoreObj1);
-
-// console.log(newObjWithDeep);
-
-// const arr1 = [1, 2, 3, 4, 5];
-
-// const arr2 = JSON.parse(JSON.stringify(arr1));
-
-// arr2.push(11);
-
-// console.log(arr1);
-// console.log(arr2);
-
-// const person1 = {
-//     name: 'John',
-//     age: 31,
-// }
-// const person2 = {
-//     name: 'Tifanny',
-//     age: 25,
-// }
-// const person3 = {
-//     name: 'Jack',
-//     age: 45,
-// }
-
-// function info(a, b, c) {
-//     return this.name + " " + this.age + (a + b + c)
-// }
-
-// const arr = [1, 2, 3];
-
-// const newInfo1 = info.call(person2, 1, 2, 3);
-// const newInfo2 = info.call(person1, 1, 2, 3);
-
-// const newInfo3 = info.apply(person3, arr);
-
-// console.log(newInfo1);
-// console.log(newInfo2);
-// console.log(newInfo3);
-
-
 const url = 'https://reqres.in/api/users';
 
-fetch(url).then(response => response.json()).then(data => console.log(data)).catch(error => console.error(error));
+const tableBody = document.getElementById('tbody');
+const form = document.getElementById('add-user-form');
 
-const person = {
-    name: name.value,
-    job: job.value,
-    age: age.value,
-    id: id.value
+fetch(url).then(response => response.json()).then(data => {
+    console.log(data);
+    data.data.map((user) => {
+        const { id, first_name, last_name, email } = user;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+             <td>${id}</td>      
+             <td>${first_name}</td>      
+             <td>${last_name}</td>      
+             <td>${email}</td>      
+             
+             <td>
+                <button class="edit-button" data-id=${id}  data-name=${first_name} data-lname=${last_name} data-email=${email}>Edit</button>
+             </td>
+             <td>
+                <button class="delete-button" data-id=${id} >Delete</button>
+             </td>
+        `
+
+        tableBody.appendChild(row)
+    })
+}).catch(error => console.error(error));
+
+
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById('update-id').value;
+    const name = document.getElementById('name').value;
+    const lName = document.getElementById('lName').value;
+    const email = document.getElementById('email').value;
+
+    if (id) {
+        updateUser(id, name, lName, email);
+        form.reset();
+
+    } else {
+
+        const formData = {
+            name: name,
+            lname: lName,
+            email: email
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify(formData)
+        }).then(response => response.json()).then(data => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+        <td>${data.id}</td>      
+        <td>${name}</td>      
+        <td>${lName}</td>      
+        <td>${email}</td>      
+        <td>
+           <button class="edit-button" data-id=${id}  data-name=${name} data-lname=${lName} data-email=${email}>Edit</button>
+        </td>
+        <td>
+           <button class="delete-button" data-id=${id} >Delete</button>
+        </td>
+        `
+            tableBody.appendChild(row);
+            form.reset();
+
+        }).catch(error => console.error(error));
+    }
+})
+
+
+tableBody.addEventListener('click', (e) => {
+
+    if (e.target.classList.contains('edit-button')) {
+        const id = e.target.dataset.id;
+        const name = e.target.dataset.name;
+        const lname = e.target.dataset.lname;
+        const email = e.target.dataset.email;
+
+        form.querySelector('#update-id').value = id;
+        form.querySelector('#name').value = name;
+        form.querySelector('#lName').value = lname;
+        form.querySelector('#email').value = email;
+
+        document.querySelector('#save-user-button').textContent = 'Update User';
+
+    } else if (e.target.classList.contains('delete-button')) {
+        const id = e.target.dataset.id;
+
+        deleteUser(id).then(() => {
+            const tableRow = e.target.closest("tr");
+            tableRow.remove();
+        }).catch((error) => {
+            console.error(error);
+        })
+    }
+
+})
+
+async function deleteUser(id) {
+    try {
+        const response = await fetch(`${url}/${id}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            return response.text();
+        }
+    } catch (error) {
+        return console.error(error);
+    }
 }
 
-fetch(url, {
-    method: 'POST',
-    headers: { 'Content-type': 'application/json' },
-    body: JSON.stringify(person)
-}).then(response => response.json()).then(data => console.log(data)).catch(error => console.error(error));
+function updateUser(id, name, lname, email) {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("lname", lname);
+    formData.append('email', email);
 
-const newObj = {
-    name: 'Jake',
-    job: 'Animator',
-    age: 18,
-    id: 4040
+    return fetch(`${url}/${id}`, {
+        method: 'PUT',
+        body: formData
+    }).then(response => {
+        return response.json();
+    }).then(data => {
+        const tableRows = document.querySelectorAll('#user-list tbody tr');
+
+        for (let row of tableRows) {
+            if (row.cells[0].textContent === id.toString()) {
+                row.cells[1].textContent = name;
+                row.cells[2].textContent = lname;
+                row.cells[3].textContent = email;
+            }
+        }
+        return data;
+
+    }).catch(error => console.error(error));
 }
-const objectId = 1;
-
-fetch(`${url}/${objectId}`, {
-    method: 'PUT',
-    headers: { 'Content-type': 'application/json' },
-    body: JSON.stringify(newObj)
-}).then(response => response.json()).then(data => console.log(data)).catch(error => console.error(error));
-
-const objectIdToDelete = 1;
-
-fetch(`${url}/${objectIdToDelete}`, {
-    method: 'DELETE'
-}).then(response => response.ok ? 'Object deleted' : 'Object deletion failed').catch(error => console.error(error));
 
 
 
 
+import myFun from './allFunctions.js';
 
+console.log(myFun());
